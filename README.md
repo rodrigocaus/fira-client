@@ -1,6 +1,6 @@
 
 # fira-client
-> Client base code #vss #LARC #ssl-vision #FiraSim 
+> Client base code #vsss #LARC #FiraSim 
 
 ## Description
 This repository was created for the purpose of helping beginner teams.
@@ -25,10 +25,18 @@ Feel free to ask and contribute too :)
 
 ## First Steps
 1. If you have protobuf installed, check which version you use with the command:
-```sh
+
+```
 protoc --version
+````
+
+### Installing protobuf (recommended)
+If you have a debian based OS, get protobuf through apt-get:
+```sh
+sudo apt-get install libprotobuf-dev protobuf-compiler
 ```
 
+### Installing protobuf (deprecated)
 1. If you do not , follow the instructions in [C++ Installation - Unix](https://github.com/google/protobuf/tree/master/src).
 
 1. According to its version download the referent in [protobuf/tags](https://github.com/google/protobuf/tags).
@@ -37,7 +45,8 @@ protoc --version
 
 1. Copy the google folder and paste it into `/ssl-client/ssl-Client/include/`
 
-1. Go to folder `/ssl-client/ssl-Client/pb/proto/` and run:
+### Getting pb files
+Go to folder `/ssl-client/cpp-client/pb/proto/` and run:
 ```sh
 sh compile.sh
 ```
@@ -61,5 +70,5 @@ sh compile.sh
 
 1. Run the Qt Project!
 
-#### Author: [Renato Sousa](https://github.com/renatoosousa)/Robocin (https://github.com/robocin)
+#### Original Author: [Renato Sousa](https://github.com/renatoosousa)/Robocin (https://github.com/robocin)
 
