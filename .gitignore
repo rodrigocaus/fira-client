@@ -1,0 +1,6 @@
+# IDE files
+.vscode/**
+
+# C++ compiled files
+**.o
+**.exe
