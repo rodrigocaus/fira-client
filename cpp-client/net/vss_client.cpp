@@ -18,6 +18,7 @@ void VSSClient::sendCommand(int id, double wheel_left, double wheel_right)
     fira_message::sim_to_ref::Packet packet;
     fira_message::sim_to_ref::Command *command = packet.mutable_cmd()->add_robot_commands();
 
+    command->set_yellowteam(this->team_yellow);
     command->set_id(id);
     command->set_wheel_left(wheel_left);
     command->set_wheel_right(wheel_right);

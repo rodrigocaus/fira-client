@@ -1,6 +1,6 @@
 /**
  * @file main.cpp
- * @author Renato Souza and Rodrigo Caus
+ * @author Renato Sousa and Rodrigo Caus
  * @brief 
  * @version 0.1
  * @date 2020-07-09
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        sim_client.sendCommand(1, -10.0, -10.0);
+                        sim_client.sendCommand(i, -10.0, -10.0);
                     }
                 }
 
