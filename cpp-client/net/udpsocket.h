@@ -52,24 +52,22 @@ public:
     UDPSocket();
     ~UDPSocket();
 
-    void bind(std::string &my_ip = "127.0.0.1", unsigned int my_port = 0);
-    void remote(std::string &remote_ip, unsigned int remote_port);
-    void remote_hostname(std::string &remote_host, unsigned int remote_port);
-    void sendData(Datagram &d);
-    int receiveData(Datagram &d, std::string &ip, unsigned int port);
+    void serve(std::string &my_ip, unsigned int my_port = 0);
+    int sendData(Datagram &d, const std::string &remote_ip, const unsigned int port);
+    int sendDataHostname(Datagram &d, const std::string &remote_name, const unsigned int port);
+    int receiveData(Datagram &d, std::string &remote_ip, unsigned int *port);
     bool hasPendingData();
 
 private:
-    void _pre_bind(struct sockaddr_in *addr, std::string &ip, unsigned int *port);
+    void _pre_bind(struct sockaddr_in *addr, const std::string &ip, unsigned int *port);
+    std::string _resolve_hostname(const std::string &hostname);
 
     int sockfd;
-    const unsigned int BUF_LEN = 4096;
+    const static unsigned int BUF_LEN = 65536;
     uint8_t recv_buffer[BUF_LEN];
     uint16_t recv_len;
     struct sockaddr_in remote_addr;
     struct sockaddr_in my_addr;
-    unsigned int port;
-    std::string addr;
 };
 
 #endif
