@@ -75,7 +75,7 @@ UDPSocket::~UDPSocket()
     close(this->sockfd);
 }
 
-void UDPSocket::_pre_bind(struct sockaddr_in *addr, std::string &ip, unsigned int port)
+void UDPSocket::_pre_bind(struct sockaddr_in *addr, const std::string &ip, unsigned int port)
 {
     std::memset(addr, 0, sizeof(*addr));
     addr->sin_family = AF_INET;
@@ -87,16 +87,16 @@ void UDPSocket::_pre_bind(struct sockaddr_in *addr, std::string &ip, unsigned in
     }
 }
 
-std::string UDPSocket::_resolve_hostname(std::string &host)
+std::string UDPSocket::_resolve_hostname(const std::string &host)
 {
     struct hostent *hp = gethostbyname(host.c_str());
     if (hp == 0 || hp->h_addr_list[0] == 0)
     {
-        std::string e = "Could not obtain address of " + remote_hostname;
+        std::string e = "Could not obtain address of " + host;
         throw UDPSocketRuntimeError(e.c_str());
     }
     char ip[16];
-    unsigned char *a = hp->h_addr_list[0];
+    unsigned char *a = (unsigned char *) hp->h_addr_list[0];
     sprintf(ip, "%d.%d.%d.%d", a[0], a[1], a[2], a[3]);
 
     return std::string(ip);
@@ -129,12 +129,12 @@ void UDPSocket::serve(std::string &my_ip, unsigned int my_port)
 int UDPSocket::sendData(Datagram &d, const std::string &remote_ip, const unsigned int remote_port)
 {
     this->_pre_bind(&(this->remote_addr), remote_ip, remote_port);
-    size_t r = sendto(this->sockfd, d.data(), d.size(), 0, (struct sockaddr *)&(this->remote_addr), sizeof(this->remote_addr));
+    int r = sendto(this->sockfd, d.data(), d.size(), 0, (struct sockaddr *)&(this->remote_addr), sizeof(this->remote_addr));
     if (r == -1)
     {
         std::cerr << "Error sending message" << std::endl;
     }
-    return int(r);
+    return r;
 }
 
 /**
@@ -162,16 +162,18 @@ int UDPSocket::sendDataHostname(Datagram &d, const std::string &remote_name, con
 int UDPSocket::receiveData(Datagram &d, std::string &ip, unsigned int *port)
 {
     struct sockaddr_in recv_addr;
-    int slen = sizeof(recv_addr);
-    this->recv_len = recvfrom(this->sockfd, this->recv_bufffer, this->BUF_LEN, 0, (struct sockaddr *)&recv_addr, &slen);
+    socklen_t slen = sizeof(recv_addr);
+    this->recv_len = recvfrom(this->sockfd, this->recv_buffer, this->BUF_LEN, 0, (struct sockaddr *)&recv_addr, &slen);
     if (this->recv_len == -1)
     {
         std::cerr << "Error receiveing message" << std::endl;
-        return -1;
     }
-    d.setdata(this->recv_buffer, this->recv_len);
-    ip = std::string(inet_ntoa(recv_addr.sin_addr));
-    *port = (unsigned int)recv_addr.sin_port;
+    else
+    {
+        d.setdata(this->recv_buffer, this->recv_len);
+        ip = std::string(inet_ntoa(recv_addr.sin_addr));
+        *port = (unsigned int)recv_addr.sin_port;
+    }
 
     return this->recv_len;
 }

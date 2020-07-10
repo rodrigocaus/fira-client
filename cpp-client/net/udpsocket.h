@@ -59,13 +59,13 @@ public:
     bool hasPendingData();
 
 private:
-    void _pre_bind(struct sockaddr_in *addr, const std::string &ip, unsigned int *port);
+    void _pre_bind(struct sockaddr_in *addr, const std::string &ip, unsigned int port);
     std::string _resolve_hostname(const std::string &hostname);
 
     int sockfd;
     const static unsigned int BUF_LEN = 65536;
     uint8_t recv_buffer[BUF_LEN];
-    uint16_t recv_len;
+    int recv_len;
     struct sockaddr_in remote_addr;
     struct sockaddr_in my_addr;
 };
