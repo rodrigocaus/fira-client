@@ -5,12 +5,12 @@ CPPFILES += main.cpp
 
 CCFILES = $(shell find $(SRCDIR) -name '*.cc')
 
-ODIR = obj
+HFILES = $(shell find $(SRCDIR) -name '*.h')
 
 OBJFILES = $(CPPFILES:.cpp=.o)
 OBJFILES += $(CCFILES:.cc=.o)
 
-CFLAGS = -g -std=c++11 -march=native -Ofast -Wall -Wextra -I./
+CFLAGS = -g -std=c++17 -march=native -Ofast -Wall -Wextra -I./
 
 LDFLAGS = -lprotobuf -lpthread -L/usr/local/lib/
 
@@ -21,7 +21,7 @@ all: $(TARGET)
 $(TARGET): $(OBJFILES)
 	g++ $^ -o $@ $(LDFLAGS)
 
-%.o: %.cpp
+%.o: %.cpp $(HFILES)
 	g++ -c $< -o $@ $(CFLAGS)
 
 source:
