@@ -8,12 +8,13 @@
  *          
  *            parser.add_argument('s', "string", "Argument 1", new ArgParse::value<std::string>("oi"));
  *            parser.add_argument('f', "float", "Argument 2", new ArgParse::value<float>("0.0"));
+ *            parser.add_argument('b', "boolean", "Argument 3", new ArgParse::value<bool>("false"));
  *            parser.add_argument('g', "flag", "A flag");
  *            parser.add_argument('h', "help", "Help Menu");
  *            
  *            auto args = parser.parse_args(argc, argv);
  * 
- *            if(args.count("help") != 0)
+ *            if(args["help"]->as<bool>())
  *            {
  *                std::cout << parser.help() << std::endl;
  *                return 0;
@@ -34,7 +35,6 @@
  * 
  */
 
-#include <any>
 #include <algorithm>
 #include <iostream>
 #include <map>
@@ -93,24 +93,18 @@ namespace ArgParse
         template <typename U>
         U as()
         {
-            std::any a;        
-            if(typeid(U).hash_code() == typeid(bool).hash_code())
+            std::string str = this->val;
+            if(typeid(U) == typeid(bool))
             {
-                if(this->val == "true" || this->val == "1")
-                    a = true;
+                if(tolower(str) == "true" || str == "1")
+                    str = "1";
                 else
-                    a = false;
+                    str = "0";
             }
-            else if(typeid(U).hash_code() == typeid(float).hash_code())
-                a = stof(this->val);
-            else if(typeid(U).hash_code() == typeid(double).hash_code())
-                a = stod(this->val);
-            else if(typeid(U).hash_code() == typeid(int).hash_code())
-                a = stoi(this->val);
-            else
-                a = this->val;
-
-            return std::any_cast<U>(a);
+            std::istringstream ss(str);
+            U ret;
+            ss >> ret;
+            return ret;
         }
     };
 

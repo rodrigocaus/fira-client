@@ -10,11 +10,11 @@ HFILES = $(shell find $(SRCDIR) -name '*.h')
 OBJFILES = $(CPPFILES:.cpp=.o)
 OBJFILES += $(CCFILES:.cc=.o)
 
-CFLAGS = -g -std=c++17 -march=native -Ofast -Wall -Wextra -I./
+CFLAGS = -g -std=c++11 -march=native -Ofast -Wall -Wextra -I./
 
 LDFLAGS = -lprotobuf -lpthread -L/usr/local/lib/
 
-TARGET = vss.sim
+TARGET = vss.exe
 
 all: $(TARGET)
 
